@@ -35,6 +35,7 @@ asset Candidate identified by candidateId {
 asset Contest identified by contestId {
   o String contestId
   o String jurisdiction
+  --> Election election
   --> Candidate[] candidates
 }
 
@@ -42,6 +43,7 @@ asset Measure identified by measureId{
   o String measureId
   o String measureDescription
   o String jurisdiction
+  --> Election election
 }
 
 participant Voter identified by voterId {
