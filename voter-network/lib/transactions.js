@@ -25,6 +25,49 @@
  * @transaction
  */
 
+ async function addVoter(addVoterData) {
+
+     // set the return value variable from the start
+	let returnValue = "";
+
+	// Create asset and participant registry connections
+	const VoterRegistry = await getParticipantRegistry('org.univote.Voter');
+	
+    // WE MAY NOT NEED TO DO THIS PART
+    // THIS HELPS REMIND US WHAT TO IMPORT
+    // IT DEPENDS ON IF WE WANT TO DO ERROR HANDLING IN THE FRONT END OR IN THE LOGIC
+        // See the file helpers.js for an example
+    // IT ALSO DEPENDS ON WHETHER WE WANT TO GIVE THE VERIFIER SELECTION MENUS OR DO MANUAL ENTRY
+        // These are the values I'm pretty sure we need to get.
+        // Others?
+	let voterName = addVoterData.voterName;
+	let voterDOB = addVoterData.voterDOB;
+	let voterCity = addVoterData.voterCity;
+	let voterStateAbbr = addVoterData.voterStateAbbr;
+    let voterZIP = addVoterData.voterZIP;
+    let voterJuris = addVoterData.voterJuris;
+    
+    // Create the unique voterId hash
+    /** 
+     * This is where
+     * we add the code
+     * to create the hash
+    */
+    voterId = ''
+
+    addVoterData.voterId = voterId
+
+    returnValue = {
+        // Add the values we want to return to the frontend
+    };
+
+    // Update all the voter asset to the blockchain
+    await VoterRegistry.update(addVoterData.voter);
+    
+    return returnValue;
+ }
+
+
 /**
  * Sample transaction processor function.
  * @param {org.univote.updateVoter} updateVoter The sample transaction instance.
