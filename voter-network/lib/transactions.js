@@ -14,6 +14,7 @@
 
 /* global getAssetRegistry getFactory emit */
 
+const helpers = require('../helpers.js');
 
 /* ****************** PARTICIPANTS  ****************** */
 
