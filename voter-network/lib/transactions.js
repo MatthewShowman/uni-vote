@@ -16,6 +16,7 @@
 
 const helpers = require('../helpers.js');
 
+
 /* ****************** PARTICIPANTS  ****************** */
 
 // VOTER
@@ -36,7 +37,6 @@ const helpers = require('../helpers.js');
 
     // Create the unique voterId hash
     let voterId = helpers.createId()
-    // Check the ID for existing ID
 
     newVoter.voterId = voterId;
 
@@ -88,7 +88,6 @@ async function addVerifier(newVerifierData) {
 
     // Create the unique voterId hash
     let verifierId = helpers.createId()
-    // Check the ID for existing ID
 
     newVerifier.verifierId = verifierId;
 
@@ -139,7 +138,6 @@ async function addElection(newElectionData) {
 
     // Create the unique voterId hash
     let electionId = helpers.createId()
-    // Check the ID for existing ID
 
     newElection.electionId = electionId;
 
@@ -220,7 +218,6 @@ async function addContest(newContestData) {
 
     // Create the unique voterId hash
     let contestId = helpers.createId()
-    // Check the ID for existing ID
 
     let newContest = {
         'contestId' : contestId,
@@ -276,7 +273,6 @@ async function addCandidate(newCandidateData) {
 
     // Create the unique voterId hash
     let candidateId = helpers.createId()
-    // Check the ID for existing ID
 
     let newCandidate = {
         'candidateId' : candidateId,
@@ -294,7 +290,7 @@ async function addCandidate(newCandidateData) {
     // Create the return value JSON
     let returnValue = {
         'firstName' : addedCandidate.voter.firstName,
-        'lastName' : addedCandidate.voter.lasstName,
+        'lastName' : addedCandidate.voter.lastName,
         'contest' : newCandidate.contest.contestName
     };
 
@@ -327,9 +323,8 @@ async function addMeasue(newMeasureData) {
     const MeasureRegistry = await getAssetRegistry('org.univote.Measure');
     const ElectionRegistry = await getAssetRegistry('org.univote.Election');
 
-    // Create the unique voterId hash
-    let MeasureId = helpers.createId()
-    // Check the ID for existing ID
+    // Create the unique measureId hash
+    let measureId = helpers.createId()
 
     let newMeasure = {
         'measureId' : newMeasureData.measureId,
@@ -382,3 +377,63 @@ async function addMeasue(newMeasureData) {
  * @param {org.univote.submitVote} submitVote The sample transaction instance.
  * @transaction
  */
+
+ async function submitVote(voteSubmissionData) {
+
+    let candidateVotes = voteSubmissionData.candidateVotes;
+    let measureVotes = voteSubmissionData.measureVotes;
+
+    const CandidateRegistry = await getAssetRegistry('org.univote.Candidate');
+    const MeasureRegistry = await getAssetRegistry('org.univote.Measure');
+
+    for(i=0; i<candidateVotes.length; i++) {
+        let currentCandidate = await CandidateRegistry.get(candidateVotes[i]);
+        currentCandidate.voteCount = currentCandidate.voteCount + 1;
+        await CandidateRegistry.update(currentCandidate.voteCount);
+    }
+
+    for(i=0; i<measureVotes.length; i++) {
+        let currentMeasure = await MeasureRegistry.get(measureVotes[i]);
+
+        if (measureVotes[i][1] = true) {
+            currentMeasure.yesVote = currentMeasure.yesVote + 1;
+            await MeasureRegistry.update(currentMeasure.yesVote);
+        } else if (measureVotes[i][1] = false) {
+            currentMeasure.noVote = currentMeasure.noVote + 1;
+            await MeasureRegistry.update(currentMeasure.noVote);
+        }
+    }
+
+    return await createVoteCert(voteSubmissionData);
+
+ }
+
+ /**
+ * Sample transaction processor function.
+ * @param {org.univote.createVoteCert} createVoteCert The sample transaction instance.
+ * @transaction
+ */
+
+ async function createVoteCert(successfulVoteData) {
+
+    const voteCertRegistry = await getAssetRegistry('org.univote.VoteCert')
+
+    // Create the unique measureId hash
+    let voteCertId = helpers.createId()
+
+    let newVoteCert = {
+        'voteCertId' : voteCertId,
+        'voter' : successfulVoteData.voter,
+        'election' : successfulVoteData.election,
+    }
+
+    await voteCertRegistry.add(newVoteCert);
+    let officialVoteCert = await voteCertRegistry.get(voteCertId);
+
+    let returnValue = {
+        'voter' : officialVoteCert.voter.firstName + " " + officialVoteCert.voter.lastName,
+        'election' : officialVoteCert.election.electionName
+    }
+
+    return returnValue;
+ }
