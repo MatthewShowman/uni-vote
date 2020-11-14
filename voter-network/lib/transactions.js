@@ -210,6 +210,7 @@ async function addContest(newContestData) {
 
     // Get the JSON object with the new voter data
     let contestName = newContestData.electionName;
+    let contestDescription = newContestData.contestDescription;
     let jurisdiction = newContestData.jurisdiction;
     let election = newContestData.election;
 
@@ -224,21 +225,24 @@ async function addContest(newContestData) {
     let newContest = {
         'contestId' : contestId,
         'contestName' : contestName,
+        'contestDescription' : contestDescription,
         'jurisdiction' : jurisdiction
     }
 
     // Add the contest asset to the blockchain
     await ContestRegistry.add(newContest);
-
+    
     // Update the election asset
-
+    let addedContest = await ContestRegistry.get(contestId)
+    newContestData.election.contests.push(addedContest);
+    await ElectionRegistry.update(newContestData.election)
 
     // Create the return value JSON
     returnValue = {
-        'electionName' : newElection.electionName,
-        'electionDescription' : newElection.electionDescription,
-        'startDate' : newElection.startDate,
-        'endDate' : newElection.endDate
+        'electionName' : election.electionName,
+        'contestName' : addedContest.contestName,
+        'contestDescription' : addedContest.contestDescription,
+        'jurisdiction' : addedContest.jurisdiction
     };
 
     return returnValue;
@@ -266,10 +270,6 @@ async function addContest(newContestData) {
 
 async function addCandidate(newCandidateData) {
 
-    // Get the JSON object with the new voter data
-    let newCandidate = newCandidateData;
-    let contestData = newCandidateData.contest;
-
     // Create participant registry connection
     const CandidateRegistry = await getAssetRegistry('org.univote.Candidate');
     const ContestRegistry = await getAssetRegistry('org.univote.Contest');
@@ -278,17 +278,23 @@ async function addCandidate(newCandidateData) {
     let candidateId = helpers.createId()
     // Check the ID for existing ID
 
-    newCandidate.candidateId = candidateId;
+    let newCandidate = {
+        'candidateId' : candidateId,
+        'candidate' : newCandidateData.voter,
+    }
 
-    // Update all the voter asset to the blockchain
+    // Add the candidate asset to the blockchain
     await CandidateRegistry.add(newCandidate);
+
+    // Update the contest asset
+    let addedCandidate = await CandidateRegistry.get(candidateId)
+    newCandidateData.contest.CandidateRegistry.push(addedCandidate);
+    await ContestRegistry.update(newCandidateData.contest)
 
     // Create the return value JSON
     let returnValue = {
-        'electionName' : newCandidate.electionName,
-        'dfgdfg' : newCandidate.electionDescription,
-        'firstName' : newCandidate.candidate.firstName,
-        'lastName' : newCandidate.candidate.lastName,
+        'firstName' : addedCandidate.voter.firstName,
+        'lastName' : addedCandidate.voter.lasstName,
         'contest' : newCandidate.contest.contestName
     };
 
@@ -317,28 +323,36 @@ async function addCandidate(newCandidateData) {
 
 async function addMeasue(newMeasureData) {
 
-    // Get the JSON object with the new voter data
-    let newMeasure = newMeasureData;
-
-    // Create participant registry connection
+    // Create registry connections
     const MeasureRegistry = await getAssetRegistry('org.univote.Measure');
     const ElectionRegistry = await getAssetRegistry('org.univote.Election');
 
     // Create the unique voterId hash
-    let measureId = helpers.createId()
+    let MeasureId = helpers.createId()
     // Check the ID for existing ID
 
-    newMeasure.measureId = measureId;
+    let newMeasure = {
+        'measureId' : newMeasureData.measureId,
+        'measureName' : newMeasureData.measureName,
+        'measureDescription' : newMeasureData.measureDescription,
+        'jurisdiction' : newMeasureData.jurisdiction
+    };
 
-    // Update all the voter asset to the blockchain
-    await MeasureRegistry.add(newElection);
+    // Add the measure asset to the blockchain
+    await MeasureRegistry.add(newMeasure);
+
+    // Update the Election asset
+    let addedMeasure = await MeasureRegistry.get(measureId)
+    newMeasureData.election.measures.push(addedMeasure);
+    await ElectionRegistry.update(newMeasureData.election)
+
 
     // Create the return value JSON
     returnValue = {
-        'measureName' : newMeasure.measureName,
-        'measureDescription' : newMeasure.measureDescription,
-        'jurisdiction' : newMeasure.jurisdiction,
-        'Election' : newElection.endDate
+        'measureName' : addedMeasure.measureName,
+        'measureDescription' : addedMeasure.measureDescription,
+        'jurisdiction' : addedMeasure.jurisdiction,
+        'electionName' : newMeasureData.election.electionName
     };
 
     return returnValue;
