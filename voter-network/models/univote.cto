@@ -56,7 +56,8 @@ asset Measure identified by measureId {
   o String measureDescription
   o String jurisdiction
   o Boolean active default=true
-  o Integer voteCount default=0
+  o Integer yesVote default=0
+  o Integer noVote default=0
   --> Election election
 }
 
