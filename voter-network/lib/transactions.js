@@ -282,14 +282,13 @@ async function addCandidate(newCandidateData) {
 
     // Update all the voter asset to the blockchain
     await CandidateRegistry.add(newCandidate);
-    await
 
     // Create the return value JSON
-    returnValue = {
+    let returnValue = {
         'electionName' : newCandidate.electionName,
-        '' : newCandidate.electionDescription,
+        'dfgdfg' : newCandidate.electionDescription,
         'firstName' : newCandidate.candidate.firstName,
-        'lastName' : newCandidate.candidate.lastName
+        'lastName' : newCandidate.candidate.lastName,
         'contest' : newCandidate.contest.contestName
     };
 
