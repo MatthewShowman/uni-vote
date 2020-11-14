@@ -48,13 +48,8 @@
     let voterJuris = addVoterData.voterJuris;
     
     // Create the unique voterId hash
-    /** 
-     * This is where
-     * we add the code
-     * to create the hash
-    */
-    voterId = ''
-
+    voterId = helpers.createId()
+    // Check the ID for existing ID
     addVoterData.voterId = voterId
 
     returnValue = {
