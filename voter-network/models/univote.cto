@@ -45,6 +45,7 @@ asset Contest identified by contestId {
 asset Candidate identified by candidateId {
   o String candidateId
   o Boolean active default=true
+  o Integer voteCount default=0
   --> Voter candidate
   --> Election election
   --> Contest contest
@@ -55,17 +56,14 @@ asset Measure identified by measureId {
   o String measureDescription
   o String jurisdiction
   o Boolean active default=true
+  o Integer voteCount default=0
   --> Election election
-}
-
-asset Ballot identified by ballotId {
-  o String ballotId
-  
 }
 
 asset voteCert by voteCertId {
   o String voteCertId
   --> Voter voter
+  --> Election election
 }
 
 
