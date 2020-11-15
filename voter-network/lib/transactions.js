@@ -19,7 +19,7 @@ const helpers = require('../helpers.js');
 
 /* ****************** PARTICIPANTS  ****************** */
 
-// VOTER
+// ******* VOTER ******* 
 
 /**
  * Sample transaction processor function.
@@ -57,12 +57,13 @@ const helpers = require('../helpers.js');
     return returnValue;
  }
 
-
 /**
  * Sample transaction processor function.
  * @param {org.univote.updateVoter} updateVoter The sample transaction instance.
  * @transaction
  */
+
+// This transaction to be developed at a later date.
 
 /**
  * Sample transaction processor function.
@@ -70,7 +71,10 @@ const helpers = require('../helpers.js');
  * @transaction
  */
 
-//VERIFIER
+// This transaction to be developed at a later date.
+
+
+// ******* VERIFIER ******* 
 
 /**
  * Sample transaction processor function.
@@ -109,18 +113,22 @@ async function addVerifier(newVerifierData) {
  * @transaction
  */
 
+// This transaction to be developed at a later date.
+
 /**
  * Sample transaction processor function.
  * @param {org.univote.deleteVerifier} deleteVerifier The sample transaction instance.
  * @transaction
  */
 
+// This transaction to be developed at a later date.
+
 
 
 
 /* ****************** ASSETS  ****************** */
 
-//ELECTION
+// ******* ELECTION ******* 
 
 /**
  * Sample transaction processor function.
@@ -173,9 +181,6 @@ async function addContestToElection(newContestData) {
 
         // Update the election asset on the blockchain
         await ElectionRegistry.update(newContestData.election);
-
-
-
 }
 
  /**
@@ -184,13 +189,18 @@ async function addContestToElection(newContestData) {
  * @transaction
  */
 
+// This transaction to be developed at a later date.
+
 /**
  * Sample transaction processor function.
  * @param {org.univote.deleteElection} deleteElection The sample transaction instance.
  * @transaction
  */
 
-//CONTEST
+// This transaction to be developed at a later date.
+
+
+// ******* CONTEST ******* 
 
 /**
  * Sample transaction processor function.
@@ -251,13 +261,18 @@ async function addContest(newContestData) {
  * @transaction
  */
 
+// This transaction to be developed at a later date.
+
 /**
  * Sample transaction processor function.
  * @param {org.univote.deleteRace} deleteContest The sample transaction instance.
  * @transaction
  */
 
-// CANDIDATE
+// This transaction to be developed at a later date.
+
+
+// ******* CANDIDATE ******* 
 
 /**
  * Sample transaction processor function.
@@ -303,13 +318,18 @@ async function addCandidate(newCandidateData) {
  * @transaction
  */
 
+// This transaction to be developed at a later date.
+
 /**
  * Sample transaction processor function.
  * @param {org.univote.deleteCandidate} deleteCandidate The sample transaction instance.
  * @transaction
  */
 
-// MEASURE
+// This transaction to be developed at a later date.
+
+
+// ******* MEASURE ******* 
 
 /**
  * Sample transaction processor function.
@@ -359,18 +379,22 @@ async function addMeasue(newMeasureData) {
  * @transaction
  */
 
+// This transaction to be developed at a later date.
+
 /**
  * Sample transaction processor function.
  * @param {org.univote.deleteMeasure} deleteMeasure The sample transaction instance.
  * @transaction
  */
 
+// This transaction to be developed at a later date.
+
 
 
 
 /* ****************** TRANSACTIONS  ****************** */
 
-// VOTING
+// ******* VOTING ******* 
 
 /**
  * Sample transaction processor function.
@@ -395,10 +419,10 @@ async function addMeasue(newMeasureData) {
     for(i=0; i<measureVotes.length; i++) {
         let currentMeasure = await MeasureRegistry.get(measureVotes[i]);
 
-        if (measureVotes[i][1] = true) {
+        if (measureVotes[i][1] == true) {
             currentMeasure.yesVote = currentMeasure.yesVote + 1;
             await MeasureRegistry.update(currentMeasure.yesVote);
-        } else if (measureVotes[i][1] = false) {
+        } else if (measureVotes[i][1] == false) {
             currentMeasure.noVote = currentMeasure.noVote + 1;
             await MeasureRegistry.update(currentMeasure.noVote);
         }
