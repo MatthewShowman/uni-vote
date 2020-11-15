@@ -53,6 +53,7 @@ asset Candidate identified by candidateId {
 
 asset Measure identified by measureId {
   o String measureId
+  O String measureName
   o String measureDescription
   o String jurisdiction
   o Boolean active default=true
