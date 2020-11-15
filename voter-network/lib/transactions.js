@@ -14,7 +14,7 @@
 
 /* global getAssetRegistry getFactory emit */
 
-const helpers = require('../helpers.js');
+//const helpers = require('../helpers.js');
 
 
 /* ****************** PARTICIPANTS  ****************** */
@@ -36,7 +36,7 @@ const helpers = require('../helpers.js');
 	const VoterRegistry = await getParticipantRegistry('org.univote.Voter');
 
     // Create the unique voterId hash
-    let voterId = helpers.createId()
+    let voterId = createId()
 
     newVoter.voterId = voterId;
 
@@ -78,7 +78,7 @@ const helpers = require('../helpers.js');
 
 /**
  * Sample transaction processor function.
- * @param {org.univote.Verifier} addVerifier The sample transaction instance.
+ * @param {org.univote.addVerifier} addVerifier The sample transaction instance.
  * @transaction
  */
 
@@ -91,7 +91,7 @@ async function addVerifier(newVerifierData) {
 	const VerifierRegistry = await getParticipantRegistry('org.univote.Verifier');
 
     // Create the unique voterId hash
-    let verifierId = helpers.createId()
+    let verifierId = createId()
 
     newVerifier.verifierId = verifierId;
 
@@ -139,49 +139,47 @@ async function addVerifier(newVerifierData) {
 async function addElection(newElectionData) {
 
     // Get the JSON object with the new voter data
-    let newElection = newElectionData;
+    let newElection = {
+        '$class' : 'org.univote.Election',
+        'electionId' : '',
+        'electionName' : newElectionData.electionName,
+        'electionDescription' : newElectionData.electionDescription,
+        'startDate' : newElectionData.startDate,
+        'endDate' : newElectionData.endDate
+    };
 
+    var factory = getFactory();
+    var election = factory.newResource('org.univote', 'Election', createId());
+
+    election.electionName = newElectionData.electionName;
+    election.electionDescription = newElectionData.electionDescription;
+    election.startDate = newElectionData.startDate;
+    election.endDate = newElectionData.endDate;
     // Create participant registry connection
 	const ElectionRegistry = await getAssetRegistry('org.univote.Election');
 
     // Create the unique voterId hash
-    let electionId = helpers.createId()
-
-    newElection.electionId = electionId;
+    //let electionId = createId();
+    //newElection.electionId = electionId;
+    
 
     // Add the election asset to the blockchain
-    await ElectionRegistry.add(newElection);
+    await ElectionRegistry.add(election);
 
     // Create the return value JSON
     returnValue = {
-        'electionName' : newElection.electionName,
-        'electionDescription' : newElection.electionDescription,
-        'startDate' : newElection.startDate,
-        'endDate' : newElection.endDate
+        //'electionId' : newElection.electionId,
+        'electionName' : newElectionData.electionName,
+        'electionDescription' : newElectionData.electionDescription,
+        'startDate' : newElectionData.startDate,
+        'endDate' : newElectionData.endDate
     };
 
     return returnValue;
  }
 
-/**
- * Sample transaction processor function.
- * @param {org.univote.addContestToElection} addContestToElection The sample transaction instance.
- * @transaction
- */
 
-async function addContestToElection(newContestData) {
 
-        // Create participant registry connection
-        const ElectionRegistry = await getAssetRegistry('org.univote.Election');
-
-        let newContest = newContestData.contest;
-
-        // Add the new contest to the election object
-        newContestData.election.contests.push(newContest)
-
-        // Update the election asset on the blockchain
-        await ElectionRegistry.update(newContestData.election);
-}
 
  /**
  * Sample transaction processor function.
@@ -204,7 +202,7 @@ async function addContestToElection(newContestData) {
 
 /**
  * Sample transaction processor function.
- * @param {org.univote.addRace} addContest The sample transaction instance.
+ * @param {org.univote.addContest} addContest The sample transaction instance.
  * @transaction
  */
 
@@ -227,7 +225,7 @@ async function addContest(newContestData) {
     const ElectionRegistry = await getAssetRegistry('org.univote.Election');
 
     // Create the unique voterId hash
-    let contestId = helpers.createId()
+    let contestId = createId()
 
     let newContest = {
         'contestId' : contestId,
@@ -287,7 +285,7 @@ async function addCandidate(newCandidateData) {
     const ContestRegistry = await getAssetRegistry('org.univote.Contest');
 
     // Create the unique voterId hash
-    let candidateId = helpers.createId()
+    let candidateId = createId()
 
     let newCandidate = {
         'candidateId' : candidateId,
@@ -344,7 +342,7 @@ async function addMeasue(newMeasureData) {
     const ElectionRegistry = await getAssetRegistry('org.univote.Election');
 
     // Create the unique measureId hash
-    let measureId = helpers.createId()
+    let measureId = createId()
 
     let newMeasure = {
         'measureId' : newMeasureData.measureId,
@@ -443,7 +441,7 @@ async function addMeasue(newMeasureData) {
     const voteCertRegistry = await getAssetRegistry('org.univote.VoteCert')
 
     // Create the unique measureId hash
-    let voteCertId = helpers.createId()
+    let voteCertId = createId()
 
     let newVoteCert = {
         'voteCertId' : voteCertId,
@@ -461,3 +459,46 @@ async function addMeasue(newMeasureData) {
 
     return returnValue;
  }
+
+
+
+ /**************** HELPERS *****************/
+
+function checkZIP(inputZIP) {
+    retVal = true;
+    if (inputZIP.length == 5)
+        for (i = 0; i < 5; i++) {
+            if (isNaN(inputZIP.substr(i,1)))
+            retVal = false;
+        }
+    else
+        retVal = false;
+
+    return retVal;
+}
+
+function createId() {
+    finalHash = ''
+    const alphaNum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz!*$@';
+
+    for(i=0; i < 64; i++) {
+        randomChar = alphaNum[Math.floor(Math.random() * 		alphaNum.length)];
+        finalHash = finalHash + randomChar;
+    }
+
+    return finalHash;
+}
+
+async function addContestToElection(newContestData) {
+
+    // Create participant registry connection
+    const ElectionRegistry = await getAssetRegistry('org.univote.Election');
+
+    let newContest = newContestData.contest;
+
+    // Add the new contest to the election object
+    newContestData.election.contests.push(newContest)
+
+    // Update the election asset on the blockchain
+    await ElectionRegistry.update(newContestData.election);
+}

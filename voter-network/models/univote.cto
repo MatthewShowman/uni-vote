@@ -16,7 +16,7 @@
  * Sample business network definition.
  */
 
-namespace org.univote.basic
+namespace org.univote
 
 
 // ******************** ASSETS ********************
@@ -28,8 +28,8 @@ asset Election identified by electionId {
   o DateTime startDate
   o DateTime endDate
   o Boolean active default=true
-  --> Contest[] contests
-  --> Measure[] measures
+  --> Contest[] contests optional
+  --> Measure[] measures optional
 }
 
 asset Contest identified by contestId {
@@ -61,7 +61,7 @@ asset Measure identified by measureId {
   --> Election election
 }
 
-asset voteCert by voteCertId {
+asset VoteCert identified by voteCertId {
   o String voteCertId
   --> Voter voter
   --> Election election
@@ -132,8 +132,17 @@ transaction addCandidate {
 }
 
 transaction addMeasure {
-asset Measure identified by measureId{
   o String measureDescription
   o String jurisdiction
+  --> Election election
+}
+
+transaction submitVote {
+  --> Candidate[] candidateVotes
+  o String[] measureVotes
+}
+
+transaction createVoteCert {
+  --> Voter voter
   --> Election election
 }
