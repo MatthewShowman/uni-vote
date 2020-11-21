@@ -161,6 +161,8 @@ async function addElection(newElectionData) {
     newElection.electionDescription = newElectionData.electionDescription;
     newElection.startDate = newElectionData.startDate;
     newElection.endDate = newElectionData.endDate;
+    newElection.contests = [];
+    newElection.measures = [];
 
     // Add the election asset to the blockchain
     await ElectionRegistry.add(newElection);
@@ -221,9 +223,10 @@ async function addContest(newContestData) {
 
     // Build the asset key-value pairs
     newContest.contestName = newContestData.contestName;
-    newContest.ContestDescription = newContestData.ContestDescription;
+    newContest.contestDescription = newContestData.contestDescription;
     newContest.jurisdiction = newContestData.jurisdiction;
     newContest.election = newContestData.election;
+    newContest.candidates = [];
 
     // Add the election asset to the blockchain
     await ContestRegistry.add(newContest);

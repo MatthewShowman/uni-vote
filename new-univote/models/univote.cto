@@ -28,18 +28,18 @@ asset Election identified by electionId {
   o DateTime startDate
   o DateTime endDate
   o Boolean active default=true
-  --> Contest[] contests optional
-  --> Measure[] measures optional
+  --> Contest[] contests
+  --> Measure[] measures
 }
 
 asset Contest identified by contestId {
   o String contestId
   o String contestName
-  o String ContestDescription
+  o String contestDescription
   o String jurisdiction
   o Boolean active default=true
   --> Election election
-  --> Candidate[] candidates optional
+  --> Candidate[] candidates
 }
 
 asset Candidate identified by candidateId {
@@ -53,7 +53,7 @@ asset Candidate identified by candidateId {
 
 asset Measure identified by measureId {
   o String measureId
-  O String measureName
+  o String measureName
   o String measureDescription
   o String jurisdiction
   o Boolean active default=true
