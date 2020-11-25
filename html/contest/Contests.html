@@ -1,0 +1,93 @@
+<html>
+
+<head>
+    <title>Election Contests</title>
+    <link rel="stylesheet" href="../css/stylesheet.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    Contests
+    <div container class="container">
+        <table id='outputTable' class="display">
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>EVENT</th>
+                    <th>JURISDICTION</th>
+                </tr>
+            </thead>
+            <tbody id='tableBody'>
+            </tbody>
+        </table>
+    </div>
+    <button onclick="window.location.href='ContestForm.html';">
+        <span>Add New</span></button>
+</body>
+
+<!-- This script block has the Javas("#electionId").val()cript logic -->
+<script type="text/javascript" language="javascript">
+    //Document.ready waits for the page to finish loading then executes the code block
+    $(document).ready(function () {
+
+        $('#outputTable').DataTable();
+        //use the getJson function of jQuery to read from a REST API endpoint
+        /* $.getJSON('http://localhost:3000/api/org.univote.Contest', function (contestData) {
+            var electionName;
+            console.log(contestData);
+            for (var i = 0; i < contestData.length; i++) {
+                $('#outputTable').dataTable().fnAddData([
+                    contestData[i].contestName,
+                    contestData[i].jurisdiction
+                ]);
+                await getElectionId(contestData[i].election.split("#").pop());
+            };
+        }); */
+        var contestData;
+
+        $.ajax({
+            url: 'http://localhost:3000/api/org.univote.Contest',
+            dataType: 'json',
+            async: 'true',
+            success: function (contestData) {
+                getElection(contestData);
+            }
+        });
+        function getElection(contestData) {
+            var tableData = {
+                "contestName": "",
+                "electionName": "",
+                "jurisdiction": ""
+            }
+            for (var i = 0; i < contestData.length; i++) {
+                (function (i) {
+                    var request = $.ajax({
+                        url: 'http://localhost:3000/api/org.univote.Election/' + contestData[i].election.split("#").pop(),
+                        dataType: 'json',
+                        async: 'true',
+                        success: function (electionData) {
+                            tableData.contestName = contestData[i].contestName;
+                            tableData.jurisdiction = contestData[i].jurisdiction;
+                            tableData.electionName = electionData.electionName;
+                            populateTable(tableData);
+                        }
+                    });
+                })(i);
+            }
+        }
+        function populateTable(tableData) {
+            $('#outputTable').dataTable().fnAddData([
+                tableData.contestName,
+                tableData.electionName,
+                tableData.jurisdiction
+            ]);
+        }
+
+    });
+
+</script>
+
+</html>
