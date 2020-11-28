@@ -41,7 +41,7 @@ $(document).ready(function () {
         var param = $.param(election);
         console.log(param);
         if (confirm("Election Event was successfully created!"))
-          document.location = 'Events.html';
+          document.location = 'events.html';
       },
       error: function (xhr, status) {
         console.log(status);

@@ -21,7 +21,7 @@ $(document).ready(function () {
         var param = $.param(contest);
         console.log(param);
         if (confirm("Contest Event was successfully created!"))
-          document.location = 'Contests.html';
+          document.location = 'contests.html';
       },
       error: function (xhr, status) {
         console.log(status);

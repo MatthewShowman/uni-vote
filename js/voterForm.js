@@ -23,7 +23,7 @@ $(document).ready(function () {
           var param = $.param(voter);
           console.log(param);
           if (confirm("Voter was successfully created!"))
-            document.location = 'Voters.html';
+            document.location = 'voters.html';
         },
         error: function (xhr, status) {
           console.log(status);

@@ -4,22 +4,25 @@
     <title>Election Contests</title>
     <link rel="stylesheet" href="../css/stylesheet.css">
     <link rel="stylesheet" href="../../css/sidenav.css">
+    <link rel="stylesheet" href="../../css/dropdown.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
 <body>
     <div class="sidenav">
         <a href="#">Home</a>
-        <a href="../election/Events.html">Elections</a>
-        <a href="../contest/Contests.html">Contests</a>
-        <a href="../voter/Voters.html">Voters</a>
+        <a href="../election/electionEvents.html">Elections</a>
+        <a href="../contest/contests.html">Contests</a>
+        <a href="../voter/voters.html">Voters</a>
     </div>
     <div class="main">
+        <i class="glyphicon glyphicon-option-vertical"></i>
         <div class="tableLayout" style="width: 75%;margin-left: auto;margin-right: auto;">
             <table id='outputTable' class="hover" style='margin:auto;width: 100%;'>
                 <thead>
@@ -27,13 +30,13 @@
                         <th>NAME</th>
                         <th>EVENT</th>
                         <th>JURISDICTION</th>
-                        <th>OPTIONS</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id='tableBody'>
                 </tbody>
             </table>
-            <button onclick="window.location.href='ContestForm.html';">
+            <button onclick="window.location.href='createContest.html';">
                 <span>Add New</span></button>
         </div>
     </div>
@@ -46,7 +49,11 @@
     $(document).ready(function () {
         $('#outputTable').dataTable({
             "info": false,
-            "bLengthChange": false
+            "bLengthChange": false,
+            "columnDefs": [{
+                "targets": 3,
+                "orderable": false
+            }]
         });
 
         //Get Contests
@@ -64,7 +71,7 @@
                 "contestName": "",
                 "electionName": "",
                 "jurisdiction": "",
-                "contestId" : ""
+                "contestId": ""
             };
             for (var i = 0; i < contestData.length; i++) {
                 (function (i) {
@@ -89,7 +96,12 @@
                 tableData.contestName,
                 tableData.electionName,
                 tableData.jurisdiction,
-                "<button title='Edit' style='font-seize=1em' onclick=\"window.location.href='EditContest.html?contestId=" + tableData.contestId + "';\"><i class='fas fa-edit'></i></button><button title='Delete' style='font-size:1em'><i class='fas fa-trash-alt'></i></button>"
+                "<div class = 'dropdown'> <button title='Options' class='dropbtn'><i class='glyphicon glyphicon-option-vertical'></i></button>" +
+                "<div class='dropdown-content'>" +
+                "<a href=\"editContest.html?contestId=" + tableData.contestId + "\">Edit</a>" +
+                "<a href=\"assignCandidates.html?contestId=" + tableData.contestId + "\">Assign Candidates</a>" +
+                "</div>" +
+                "</div>"
             ]);
         };
 

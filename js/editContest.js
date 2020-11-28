@@ -12,6 +12,9 @@ $(document).ready(function () {
     var currentElectionId;
     var contestData;
 
+    //Instantiate multiselect for candidates
+    $('.candidatesDropDown').select2();
+
     //Populate Election dropdown
     $.getJSON('http://localhost:3000/api/org.univote.Election', function (electionData) {
         for (var i = 0; i < electionData.length; i++) {
@@ -19,7 +22,12 @@ $(document).ready(function () {
         };
     });
 
-
+    //Populate Candidate dropdown
+    $.getJSON('http://localhost:3000/api/org.univote.Voter', function (voterData) {
+        for (var i = 0; i < voterData.length; i++) {
+            $('#candidates').append('<option value ="' + voterData[i].voterId + '">' + voterData[i].firstName + " " + voterData[i].lastName + '</option>')
+        };
+    });
 
     //Populate boxes with current info and get current election id
     $.getJSON('http://localhost:3000/api/org.univote.Contest/' + contestId, function (data) {
@@ -73,7 +81,7 @@ $(document).ready(function () {
                 var param = $.param(contest);
                 console.log(param);
                 if (confirm("Contest was successfully updated!"))
-                    document.location = 'Contests.html';
+                    document.location = 'contests.html';
             },
             error: function (xhr, status) {
                 console.log(status);

@@ -6,17 +6,26 @@
   <title>Contest Form</title>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="../css/stylesheet.css">
+  <link rel="stylesheet" href="../../css/sidenav.css">
   <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css"  />
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
   <script src="../../js/editContest.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 </head>
 
 <body>
-  <div class="container" style='height: 50%; width:50%'>
+  <div class="sidenav">
+    <a href="#">Home</a>
+    <a href="../election/electionEvents.html">Elections</a>
+    <a href="../contest/contests.html">Contests</a>
+    <a href="../voter/voters.html">Voters</a>
+  </div>
+  <div class="main" style='height: 50%; width:50%'>
     <form action="" method="post" id="submitContest">
       <label>Contest Name:</label>
       <input type="text" name="contestName" id="contestName">
@@ -29,7 +38,10 @@
       <br>
       <label>Election Event:</label>
       <select name="election" id="election">
-        
+      </select>
+      <br>
+      <label>Candidates:</label>
+      <select class="candidatesDropDown" name="candidates" id="candidates" multiple="multiple" style="width: 75%">
       </select>
       <br>
       <button type="button" id="submitBtn">Submit</button>
