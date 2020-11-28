@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <title>Election Events</title>
+    <link rel="stylesheet" href="../../css/stylesheet.css">
+    <link rel="stylesheet" href="../../css/sidenav.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"></script>
+</head>
+<script>
+    function deactivateVoter(voterId) {
+        console.log(electionEvent);
+        $.getJSON('http://localhost:3000/api/org.univote.Election/' + voterId, function (voterData) {
+            console.log(voterData);
+            voterData.active = false;
+            console.log(data);
+            putDeactivation(data);
+        });
+    };
+
+    function putDeactivation(voterData) {
+        $.ajax({
+            url: "http://localhost:3000/api/org.univote.Voter/" + voterData.voterId,
+            type: "PUT",
+            dataType: "json",
+            data: electionEvent,
+            success: function (election) {
+                var param = $.param(election);
+                console.log(param);
+                if (confirm("Voter was successfully deactivated!"))
+                    document.location = 'Voters.html';
+            },
+            error: function (xhr, status) {
+                console.log(status);
+                console.log(xhr);
+                alert("There was a problem.");
+            }
+        })
+    };
+
+
+</script>
+
+<body>
+    <div class="sidenav">
+        <a href="#">Home</a>
+        <a href="../election/Events.html">Elections</a>
+        <a href="../contest/Contests.html">Contests</a>
+        <a href="../voter/Voters.html">Voters</a>
+    </div>
+    <div class="main">
+        <div class="tableLayout" style="width: 75%;margin-left: auto;margin-right: auto;">
+            <table id='outputTable' class="hover">
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>JURISDICTION</th>
+                        <th>ACTIVE</th>
+                        <th>OPTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id='tableBody'>
+                </tbody>
+            </table>
+            <button onclick="window.location.href='VoterForm.html';">
+                <span>Add New</span></button>
+        </div>
+    </div>
+
+</body>
+
+<!-- This script block has the Javas("#electionId").val()cript logic -->
+<script type="text/javascript" language="javascript">
+    //Document.ready waits for the page to finish loading then executes the code block
+    $(document).ready(function () {
+
+
+        $('#outputTable').DataTable({
+            "info": false,
+            "bLengthChange": false
+        });
+        //use the getJson function of jQuery to read from a REST API endpoint
+        $.getJSON('http://localhost:3000/api/org.univote.Voter', function (data) {
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                $('#outputTable').dataTable().fnAddData([
+                    data[i].firstName + ' ' + data[i].lastName,
+                    data[i].jurisdiction,
+                    data[i].active,
+                    "<button title='Edit' style='font-seize=1em;' onclick=\"window.location.href='EditElectionEvent.html?event=" + data[i].voterId + "';\"><i class='fas fa-edit'></i></button><button title='Delete' onclick=\"deactivateEvent('" + data[i].voterId + "');\" style='font-size:1em'><i class='fas fa-trash-alt'></i></button>"
+                ]);
+            };
+        });
+
+
+
+
+    });
+</script>
+
+</html>

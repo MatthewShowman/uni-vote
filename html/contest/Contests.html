@@ -48,19 +48,8 @@
             "info": false,
             "bLengthChange": false
         });
-        //use the getJson function of jQuery to read from a REST API endpoint
-        /* $.getJSON('http://localhost:3000/api/org.univote.Contest', function (contestData) {
-            var electionName;
-            console.log(contestData);
-            for (var i = 0; i < contestData.length; i++) {
-                $('#outputTable').dataTable().fnAddData([
-                    contestData[i].contestName,
-                    contestData[i].jurisdiction
-                ]);
-                await getElectionId(contestData[i].election.split("#").pop());
-            };
-        }); */
 
+        //Get Contests
         $.ajax({
             url: 'http://localhost:3000/api/org.univote.Contest',
             dataType: 'json',
@@ -69,12 +58,14 @@
                 getElection(contestData);
             }
         });
+        //Get Election data from each Contest
         function getElection(contestData) {
             var tableData = {
                 "contestName": "",
                 "electionName": "",
-                "jurisdiction": ""
-            }
+                "jurisdiction": "",
+                "contestId" : ""
+            };
             for (var i = 0; i < contestData.length; i++) {
                 (function (i) {
                     var request = $.ajax({
@@ -85,20 +76,22 @@
                             tableData.contestName = contestData[i].contestName;
                             tableData.jurisdiction = contestData[i].jurisdiction;
                             tableData.electionName = electionData.electionName;
+                            tableData.contestId = contestData[i].contestId;
                             populateTable(tableData);
                         }
                     });
                 })(i);
-            }
-        }
+            };
+        };
+        //Populate table with Contest and Election data
         function populateTable(tableData) {
             $('#outputTable').dataTable().fnAddData([
                 tableData.contestName,
                 tableData.electionName,
                 tableData.jurisdiction,
-                "<button title='Edit' style='font-seize=1em'><i class='fas fa-edit'></i></button><button title='Delete' style='font-size:1em'><i class='fas fa-trash-alt'></i></button>"
+                "<button title='Edit' style='font-seize=1em' onclick=\"window.location.href='EditContest.html?contestId=" + tableData.contestId + "';\"><i class='fas fa-edit'></i></button><button title='Delete' style='font-size:1em'><i class='fas fa-trash-alt'></i></button>"
             ]);
-        }
+        };
 
     });
 
